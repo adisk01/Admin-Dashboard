@@ -36,3 +36,52 @@
     transform: rotate(360deg);
   }
 }
+/* Add this style to your CSS file or style section */
+
+/* Styling for the entire table */
+.Table {
+  width: 100%;
+  border-collapse: collapse; /* Remove spacing between table cells */
+  margin-top: 1rem;
+}
+
+/* Styling for table headers */
+.Table thead th {
+  background-color: #f8f9fa; /* Header background color */
+  border: 1px solid #dee2e6; /* Border color for header cells */
+  padding: 8px;
+}
+
+/* Styling for alternating rows */
+.Table tbody tr:nth-child(even) {
+  background-color: #f8f9fa; /* Alternate row background color */
+}
+
+/* Styling for table cells in the body */
+.Table tbody tr td {
+  border: 1px solid #dee2e6; /* Border color for cells */
+  padding: 8px;
+}
+
+/* Styling for checkboxes in the first column */
+.Table tbody tr td:first-child input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+/* Styling for selected rows */
+.Table tbody tr.selected {
+  background-color: #dee2e6; /* Selected row background color */
+}
+
+/* Hover effect on rows */
+.Table tbody tr:hover {
+  background-color: #e2e6ea; /* Hovered row background color */
+}
+
+/* Styling for the checkbox in the header */
+.Table thead th:first-child input[type="checkbox"] {
+  margin-right: 5px;
+}
+.style {
+  align-items: center;
+}
