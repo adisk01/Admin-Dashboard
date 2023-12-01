@@ -8,22 +8,67 @@ const Layout = (props) => {
     const [currentItems, setCurrentItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
+    const [editID , setEditID]=useState(-1);
+    const [name , setName] = useState("");
+    const [email , setEmail] = useState("");
+    const [role , setRole] = useState("");
     const itemsPerPage = 10;
     const handleCheckboxChange = async () => {
 
     }
-    const handleEdit = async () => {
-  
+    const handleEdit = async (id) => {
+       
+        const editItem = data.find(item => item.id === id);
+      
+        if (editItem) {
+          setEditID(id);
+          setName(editItem.name);
+          setEmail(editItem.email);
+          setRole(editItem.role);
+        }
+      }
+      
+    const handleDelete = async (id) => {
+        const updatedData = currentItems.filter(item => item.id !== id);
+        setCurrentItems(updatedData);
+        setEditID(-1);
     }
-    const handleDelete = async () => {
-  
+    const handleUpdate =async (id) => {
+        const updatedItemIndex = data.findIndex(item => item.id === id);
+
+        if (updatedItemIndex !== -1) {
+      
+          const updatedData = [...data];
+          updatedData[updatedItemIndex] = {
+            ...data[updatedItemIndex],
+            name: name,
+            email: email,
+            role: role
+          };
+    
+
+          setCurrentItems(updatedData);
+    
+          setEditID(-1);
+        }
     }
     useEffect(() => {
-        const endoffset = itemOffset + itemsPerPage;
-        setCurrentItems(data.slice(itemOffset, endoffset));
-        setPageCount(Math.ceil(data.length / itemsPerPage));
+        const startIndex = itemOffset;
+        const endIndex = startIndex + itemsPerPage;
+    
+        const updatedData = data.slice(startIndex, endIndex);
+        setCurrentItems(updatedData);
+    
+        const updatedPageCount = Math.ceil(data.length / itemsPerPage);
+        setPageCount(updatedPageCount);
+    
+        // Adjust item offset if it exceeds the updated page count
+        if (itemOffset >= updatedPageCount * itemsPerPage) {
+          setItemOffset(Math.max(0, (updatedPageCount - 1) * itemsPerPage));
+        }
+      }, [itemOffset, itemsPerPage, data]);
 
-    }, [itemOffset, itemsPerPage, data]);
+
     const handlePageClick = (event) => {
         const newOffset = (event.selected * itemsPerPage) % data.length;
         setItemOffset(newOffset);
@@ -45,6 +90,15 @@ const Layout = (props) => {
                     </thead>
                     <tbody>
                         {currentItems.map((item) => (
+                            item.id===editID
+                            ? <tr>
+                                <td>{item.id}</td>
+                                <td><input type="text" value={name} onChange={e => setName(e.target.value)}/></td>
+                                <td><input type="text" value={email} onChange={e => setEmail(e.target.value)}/></td>
+                                <td><input type="text" value={role} onChange={e => setRole(e.target.value)}/></td>
+                                <td><button onClick={()=>handleUpdate(item.id)}>Update</button></td>
+                            </tr>
+                            :
                             <tr key={item.id}>
                                 <td class="style"><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} /></td>
                                 <td class="style">{item.id}</td>
