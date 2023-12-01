@@ -3,77 +3,98 @@ import {Button, Table } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import './Layout.css'
 const Layout = (props) => {
-
     const { data } = props;
     const [currentItems, setCurrentItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
     const [itemOffset, setItemOffset] = useState(0);
-    const [editID , setEditID]=useState(-1);
-    const [name , setName] = useState("");
-    const [email , setEmail] = useState("");
-    const [role , setRole] = useState("");
-    const itemsPerPage = 10;
-    const handleCheckboxChange = async () => {
-
-    }
+    const [editID, setEditID] = useState(-1);
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [role, setRole] = useState("");
+   const itemsPerPage=10;
+    const handleCheckboxChange = async (id) => {};
+  
     const handleEdit = async (id) => {
-       
-        const editItem = data.find(item => item.id === id);
-      
-        if (editItem) {
-          setEditID(id);
-          setName(editItem.name);
-          setEmail(editItem.email);
-          setRole(editItem.role);
-        }
+      const editItem = data.find((item) => item.id === id);
+  
+      if (editItem) {
+        setEditID(id);
+        setName(editItem.name);
+        setEmail(editItem.email);
+        setRole(editItem.role);
       }
-      
-    const handleDelete = async (id) => {
-        const updatedData = currentItems.filter(item => item.id !== id);
+    };
+  
+    const handleDelete = (id) => {
+      const updatedData = data.filter((item) => item.id !== id);
+  
+      setCurrentItems(updatedData);
+  
+      const startIndex = itemOffset;
+      const endIndex = startIndex + itemsPerPage;
+      const currentItemsAfterDelete = updatedData.slice(startIndex, endIndex);
+  
+      setCurrentItems(currentItemsAfterDelete);
+  
+      setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+  
+      if (itemOffset >= pageCount * itemsPerPage) {
+        setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
+      }
+  
+      setEditID(-1);
+    };
+  
+    const handleUpdate = async (id) => {
+      const updatedItemIndex = data.findIndex((item) => item.id === id);
+  
+      if (updatedItemIndex !== -1) {
+        const updatedData = [...data];
+        updatedData[updatedItemIndex] = {
+          ...data[updatedItemIndex],
+          name: name,
+          email: email,
+          role: role,
+        };
+  
         setCurrentItems(updatedData);
-        setEditID(-1);
-    }
-    const handleUpdate =async (id) => {
-        const updatedItemIndex = data.findIndex(item => item.id === id);
-
-        if (updatedItemIndex !== -1) {
-      
-          const updatedData = [...data];
-          updatedData[updatedItemIndex] = {
-            ...data[updatedItemIndex],
-            name: name,
-            email: email,
-            role: role
-          };
-    
-
-          setCurrentItems(updatedData);
-    
-          setEditID(-1);
-        }
-    }
-    useEffect(() => {
+  
         const startIndex = itemOffset;
         const endIndex = startIndex + itemsPerPage;
-    
-        const updatedData = data.slice(startIndex, endIndex);
-        setCurrentItems(updatedData);
-    
-        const updatedPageCount = Math.ceil(data.length / itemsPerPage);
-        setPageCount(updatedPageCount);
-    
-        // Adjust item offset if it exceeds the updated page count
-        if (itemOffset >= updatedPageCount * itemsPerPage) {
-          setItemOffset(Math.max(0, (updatedPageCount - 1) * itemsPerPage));
+        const currentItemsAfterUpdate = updatedData.slice(startIndex, endIndex);
+  
+        setCurrentItems(currentItemsAfterUpdate);
+  
+        setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+  
+        if (itemOffset >= pageCount * itemsPerPage) {
+          setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
         }
-      }, [itemOffset, itemsPerPage, data]);
-
-
-    const handlePageClick = (event) => {
-        const newOffset = (event.selected * itemsPerPage) % data.length;
-        setItemOffset(newOffset);
+  
+        setEditID(-1);
+      }
     };
-
+  
+    useEffect(() => {
+      const startIndex = itemOffset;
+      const endIndex = startIndex + itemsPerPage;
+  
+      const updatedData = data.slice(startIndex, endIndex);
+      setCurrentItems(updatedData);
+  
+      const updatedPageCount = Math.ceil(data.length / itemsPerPage);
+      setPageCount(updatedPageCount);
+  
+      if (itemOffset >= updatedPageCount * itemsPerPage) {
+        setItemOffset(Math.max(0, (updatedPageCount - 1) * itemsPerPage));
+      }
+    }, [itemOffset, itemsPerPage, data]);
+  
+    const handlePageClick = (event) => {
+      const newOffset = (event.selected * itemsPerPage) % data.length;
+      setItemOffset(newOffset);
+    };
+  
     return (
         <>
             <div style={{ margin: "10rem" }}>
@@ -100,11 +121,11 @@ const Layout = (props) => {
                             </tr>
                             :
                             <tr key={item.id}>
-                                <td class="style"><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} /></td>
-                                <td class="style">{item.id}</td>
-                                <td class="style">{item.name}</td>
-                                <td class="style">{item.email}</td>
-                                <td class="style">{item.role}</td>
+                                <td className="style"><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} /></td>
+                                <td className="style">{item.id}</td>
+                                <td className="style">{item.name}</td>
+                                <td className="style">{item.email}</td>
+                                <td className="style">{item.role}</td>
                                 <td >
                                     <Button variant="info" size="sm" onClick={() => handleEdit(item.id)}>Edit</Button>
                                     {' '}
