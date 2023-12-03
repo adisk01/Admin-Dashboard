@@ -20,7 +20,8 @@ const App = () => {
 
   return (
     <>
-    <Layout  data={data}/>
+    <Layout data={data} setData={setData} />
+
     </>
   );
 };

@@ -3,8 +3,18 @@ import { Button, Table } from 'react-bootstrap';
 import './Layout.css';
 import PaginationComponent from './Paginate';
 const Layout = (props) => {
-  const { data } = props;
-
+  // const { datat } = props;
+  // var alldata = datat;
+  // const [propValue, setPropValue] = useState(props.initialProp);
+  console.log("props vlaue" ,(props.initalProp));
+  useEffect(() => {
+    // Update the state when the prop changes
+    setPropValue(props.initialProp);
+  }, [props.initialProp]);
+  // console.log("props intial" , propValue);
+  // const [data , setData] = useState({data});
+  // console.log('render', data);
+  const data= {};
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -14,9 +24,18 @@ const Layout = (props) => {
   const [role, setRole] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
   const itemsPerPage = 10;
-
-  const handleCheckboxChange = (id) => {
-        console.log(selectedItems);
+  // useEffect(() => {
+  //   setPropValue(props.initialProp);
+  // }, [props.initialProp]);
+  const handleCheckboxChange = () => {
+    // if (selectedItems.length === currentItems.length) {
+    //   // If all items are selected, clear the selection
+    //   setSelectedItems([]);
+    // } else {
+    //   // Otherwise, select all items
+    //   const allItemIds = currentItems.map((item) => item.id);
+    //   setSelectedItems(allItemIds);
+    // }
   };
 
   const handleEdit = (id) => {
@@ -30,9 +49,22 @@ const Layout = (props) => {
     }
   };
 
-  const handleDelete = (id) => {
-        const newlist= data.filter(data => data.id !== id)
-        props.setData(newlist)
+  const handleDelete = () => {
+    // const updatedData = data.filter((item) => !selectedItems.includes(item.id));
+
+    // setCurrentItems(updatedData);
+    // const startIndex = itemOffset;
+    // const endIndex = startIndex + itemsPerPage;
+    // const currentItemsAfterDelete = updatedData.slice(startIndex, endIndex);
+
+    // setCurrentItems(currentItemsAfterDelete);
+
+    // setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+    // if (itemOffset >= pageCount * itemsPerPage) {
+    //   setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
+    // }
+    // setSelectedItems([]);
+    // setEditID(-1);
   };
 
   const handleUpdate = (id) => {
@@ -47,46 +79,45 @@ const Layout = (props) => {
         role: role,
       };
 
-      props.setData(updatedData);
+      setData(updatedData);
 
-      const startIndex = itemOffset;
-      const endIndex = startIndex + itemsPerPage;
-      const currentItemsAfterUpdate = updatedData.slice(startIndex, endIndex);
+      // const startIndex = itemOffset;
+      // const endIndex = startIndex + itemsPerPage;
+      // const currentItemsAfterUpdate = updatedData.slice(startIndex, endIndex);
 
-      setCurrentItems(currentItemsAfterUpdate);
+      // setCurrentItems(currentItemsAfterUpdate);
 
-      setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+      // setPageCount(Math.ceil(updatedData.length / itemsPerPage));
 
-      if (itemOffset >= pageCount * itemsPerPage) {
-        setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
-      }
+      // if (itemOffset >= pageCount * itemsPerPage) {
+      //   setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
+      // }
 
       setEditID(-1);
     }
   };
 
-  useEffect(() => {
-    const startIndex = itemOffset;
-    const endIndex = startIndex + itemsPerPage;
+//   useEffect(() => {
+//     const startIndex = itemOffset;
+//     const endIndex = startIndex + itemsPerPage;
 
-    const updatedData = data.slice(startIndex, endIndex);
-    setCurrentItems(updatedData);
+//     const updatedData = data.slice(startIndex, endIndex);
+//     setCurrentItems(updatedData);
 
-    const updatedPageCount = Math.ceil(data.length / itemsPerPage);
-    setPageCount(updatedPageCount);
+//     const updatedPageCount = Math.ceil(data.length / itemsPerPage);
+//     setPageCount(updatedPageCount);
 
-    if (itemOffset >= updatedPageCount * itemsPerPage) {
-      setItemOffset(Math.max(0, (updatedPageCount - 1) * itemsPerPage));
-    }
-  }, [itemOffset, itemsPerPage, data]);
+//     if (itemOffset >= updatedPageCount * itemsPerPage) {
+//       setItemOffset(Math.max(0, (updatedPageCount - 1) * itemsPerPage));
+//     }
+//   }, [itemOffset, itemsPerPage, data]);
 
-  const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % data.length;
-    console.log("items per page", itemsPerPage);
-    console.log("length of data", data.length);
-    setItemOffset(newOffset);
-    
-  };
+//   const handlePageClick = (event) => {
+//     const newOffset = (event.selected * itemsPerPage) % data.length;
+//     console.log("items per page", itemsPerPage);
+//     console.log("length of data", data.length);
+//     setItemOffset(newOffset);
+//   };
 
   return (
     <>
@@ -105,6 +136,8 @@ const Layout = (props) => {
               <th>
                 <input
                   type="checkbox"
+                  onChange={() => handleCheckboxChange()}
+                  checked={selectedItems.length === currentItems.length}
                 />
               </th>
               <th>Id</th>
@@ -115,7 +148,7 @@ const Layout = (props) => {
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((item) => (
+            {data.map((item) => (
               item.id === editID ? (
                 <tr key={item.id}>
                   <td>{item.id}</td>
@@ -133,8 +166,6 @@ const Layout = (props) => {
                   <td className="style">{item.role}</td>
                   <td>
                     <Button variant="info" size="sm" onClick={() => handleEdit(item.id)}>Edit</Button>
-                    {'   '}
-                    <Button variant="info" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
                   </td>
                 </tr>
               )
@@ -142,7 +173,7 @@ const Layout = (props) => {
           </tbody>
         </Table>
       </div>
-      <PaginationComponent pageCount={pageCount} handlePageClick={handlePageClick} />
+      {/* <PaginationComponent pageCount={pageCount} handlePageClick={handlePageClick} /> */}
     </>
   )
 }
