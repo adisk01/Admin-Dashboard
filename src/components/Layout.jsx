@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button, InputGroup, Table } from 'react-bootstrap';
 import './Layout.css';
 import PaginationComponent from './Paginate';
+
 const Layout = (props) => {
   const { data } = props;
 
@@ -13,10 +14,27 @@ const Layout = (props) => {
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
+  const [filteredName, setFilteredName] = useState('');
+  const [filteredRole, setFilteredRole] = useState('');
   const itemsPerPage = 10;
 
   const handleCheckboxChange = (id) => {
-        console.log(selectedItems);
+    if (id === 'all') {
+      // If the "Select All" checkbox is clicked
+      if (selectedItems.length === currentItems.length) {
+        setSelectedItems([]);
+      } else {
+        const allItemIds = currentItems.map((item) => item.id);
+        setSelectedItems(allItemIds);
+      }
+    } else {
+      // If an individual checkbox is clicked
+      if (selectedItems.includes(id)) {
+        setSelectedItems((prev) => prev.filter((item) => item !== id));
+      } else {
+        setSelectedItems((prev) => [...prev, id]);
+      }
+    }
   };
 
   const handleEdit = (id) => {
@@ -30,9 +48,24 @@ const Layout = (props) => {
     }
   };
 
-  const handleDelete = (id) => {
-        const newlist= data.filter(data => data.id !== id)
-        props.setData(newlist)
+  const handleDelete = () => {
+    const updatedData = data.filter((item) => !selectedItems.includes(item.id));
+
+    props.setData(updatedData);
+
+    const startIndex = itemOffset;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItemsAfterDelete = updatedData.slice(startIndex, endIndex);
+
+    setCurrentItems(currentItemsAfterDelete);
+
+    setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+    if (itemOffset >= pageCount * itemsPerPage) {
+      setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
+    }
+
+    setSelectedItems([]);
+    setEditID(-1);
   };
 
   const handleUpdate = (id) => {
@@ -82,15 +115,55 @@ const Layout = (props) => {
 
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % data.length;
-    console.log("items per page", itemsPerPage);
-    console.log("length of data", data.length);
     setItemOffset(newOffset);
-    
+  };
+  // const Filterbyname = () => {
+  //   const updatedData = data.filter((item) => e.target.value === '' ? item : item.name.toLowerCase);
+
+  //   props.setData(updatedData);
+  // }
+  // const Filterbyrole = () => {
+
+  // }
+  const Filterbyname = (e) => {
+    setFilteredName(e.target.value);
   };
 
+  const Filterbyrole = (e) => {
+    setFilteredRole(e.target.value);
+  };
+
+  const applyFilters = () => {
+    const filteredData = data.filter((item) => {
+      const nameMatch = item.name.toLowerCase().includes(filteredName.toLowerCase());
+      const roleMatch = item.role.toLowerCase().includes(filteredRole.toLowerCase());
+      return nameMatch && roleMatch;
+    });
+
+    const startIndex = itemOffset;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItemsAfterFilter = filteredData.slice(startIndex, endIndex);
+
+    setCurrentItems(currentItemsAfterFilter);
+
+    setPageCount(Math.ceil(filteredData.length / itemsPerPage));
+
+    if (itemOffset >= pageCount * itemsPerPage) {
+      setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
+    }
+  };
+
+  useEffect(() => {
+    applyFilters();
+  }, [filteredName, filteredRole, itemOffset, itemsPerPage, data]);
   return (
     <>
       <div style={{ margin: '10rem' }}>
+        <div>
+          <input type="text" placeholder='Filter By Name' onChange={Filterbyname} />
+          {'   '}
+          <input type="text" placeholder='Filter By Role' onChange={Filterbyrole} />
+        </div>
         <Button
           variant="danger"
           size="sm"
@@ -105,6 +178,8 @@ const Layout = (props) => {
               <th>
                 <input
                   type="checkbox"
+                  onChange={() => handleCheckboxChange('all')}
+                  checked={selectedItems.length === currentItems.length}
                 />
               </th>
               <th>Id</th>
@@ -144,7 +219,7 @@ const Layout = (props) => {
       </div>
       <PaginationComponent pageCount={pageCount} handlePageClick={handlePageClick} />
     </>
-  )
-}
+  );
+};
 
 export default Layout;
