@@ -1,53 +1,51 @@
-/* Add this style to your CSS file or style section */
 
-/* Styling for the entire table */
 .Table {
     width: 100%;
-    border-collapse: collapse; /* Remove spacing between table cells */
+    border-collapse: collapse; 
     margin-top: 1rem;
   }
   
-  /* Styling for table headers */
+ 
   .Table thead th {
-    background-color: #f8f9fa; /* Header background color */
-    border: 1px solid #dee2e6; /* Border color for header cells */
+    background-color: #f8f9fa; 
+    border: 1px solid #dee2e6; 
     padding: 8px;
   }
   
-  /* Styling for alternating rows */
+
   .Table tbody tr:nth-child(even) {
-    background-color: #f8f9fa; /* Alternate row background color */
+    background-color: #f8f9fa;
   }
   
-  /* Styling for table cells in the body */
+ 
   .Table tbody tr td {
-    border: 1px solid #dee2e6; /* Border color for cells */
+    border: 1px solid #dee2e6; 
     padding: 8px;
   }
   
-  /* Styling for checkboxes in the first column */
+
   .Table tbody tr td:first-child input[type="checkbox"] {
     margin-right: 5px;
   }
   
-  /* Styling for selected rows */
+ 
   .Table tbody tr.selected {
-    background-color: #dee2e6; /* Selected row background color */
+    background-color: #dee2e6;
   }
   
-  /* Hover effect on rows */
+
   .Table tbody tr:hover {
-    background-color: #e2e6ea; /* Hovered row background color */
+    background-color: #e2e6ea; 
   }
   
-  /* Styling for the checkbox in the header */
+
   .Table thead th:first-child input[type="checkbox"] {
     margin-right: 5px;
   }
   .style {
     align-items: center;
   }
-  /* Add this style to your CSS file or style section */
+ 
 
 .pagination {
   display: flex;
@@ -74,11 +72,11 @@
   color: #fff;
 }
 .Table tbody tr:hover {
-  background-color: #f5f5f5; /* Add your desired background color for the hover effect */
+  background-color: #f5f5f5;
 }
 
 .Table tbody tr.selected {
-  background-color: #a0c4ff; /* Add your desired background color for the selected effect */
+  background-color: #a0c4ff; 
 }
 .edit {
 background-color: lightblue;
@@ -90,16 +88,14 @@ font-size: 15px
   border-radius: 8px;
   font-size: 15px
 }
-/* Add this style to your CSS file or style section */
 
-/* Styling for the filter div */
 .filter {
   margin: 10rem;
 }
 
-/* Styling for the name filter input */
+
 .namefilter {
-  /* Add your desired styles for the name filter input */
+
   padding: 5px;
   animation: alternate;
   margin-right: 10px;
@@ -107,16 +103,16 @@ font-size: 15px
   border-radius: 5px;
 }
 
-/* Styling for the role filter input */
+
 .rolefilter {
-  /* Add your desired styles for the role filter input */
+
   padding: 5px;
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-/* Add this style to your CSS file or style section */
+
 .update{
   background-color:   green;
   border-radius: 8px;
