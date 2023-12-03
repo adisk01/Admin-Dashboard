@@ -48,26 +48,45 @@ const Layout = (props) => {
     }
   };
 
-  const handleDelete = () => {
-    const updatedData = data.filter((item) => !selectedItems.includes(item.id));
-
+  const handleDelete = (id) => {
+    const updatedData = data.filter((item) => item.id !== id);
+  
     props.setData(updatedData);
-
+  
     const startIndex = itemOffset;
     const endIndex = startIndex + itemsPerPage;
     const currentItemsAfterDelete = updatedData.slice(startIndex, endIndex);
-
+  
     setCurrentItems(currentItemsAfterDelete);
-
+  
     setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+  
     if (itemOffset >= pageCount * itemsPerPage) {
       setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
     }
-
+  
     setSelectedItems([]);
     setEditID(-1);
   };
-
+  const handleDeleteall = (id) => {
+    const updatedData = data.filter((item) => !selectedItems.includes(item.id));
+    props.setData(updatedData);
+  
+    const startIndex = itemOffset;
+    const endIndex = startIndex + itemsPerPage;
+    const currentItemsAfterDelete = updatedData.slice(startIndex, endIndex);
+  
+    setCurrentItems(currentItemsAfterDelete);
+  
+    setPageCount(Math.ceil(updatedData.length / itemsPerPage));
+  
+    if (itemOffset >= pageCount * itemsPerPage) {
+      setItemOffset(Math.max(0, (pageCount - 1) * itemsPerPage));
+    }
+  
+    setSelectedItems([]);
+    setEditID(-1);
+  };
   const handleUpdate = (id) => {
     const updatedItemIndex = data.findIndex((item) => item.id === id);
 
@@ -160,7 +179,7 @@ const Layout = (props) => {
         className='deleteall'
           variant="danger"
           size="sm"
-          onClick={() => handleDelete()}
+          onClick={() => handleDeleteall()}
           style={{ marginBottom: '10px', float: 'right' }}
         >
           Delete Selected
@@ -203,6 +222,7 @@ const Layout = (props) => {
                     <Button className='edit' variant="info" size="sm" onClick={() => handleEdit(item.id)}>Edit</Button>
                     {'   '}
                     <Button className='delete' variant="info" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
+
                   </td>
                 </tr>
               )
