@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, InputGroup, Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 import './Layout.css';
 import PaginationComponent from './Paginate';
 
@@ -81,7 +81,7 @@ const Layout = (props) => {
       };
 
       props.setData(updatedData);
-
+      alert("Updated Sucessfully")
       const startIndex = itemOffset;
       const endIndex = startIndex + itemsPerPage;
       const currentItemsAfterUpdate = updatedData.slice(startIndex, endIndex);
@@ -117,14 +117,7 @@ const Layout = (props) => {
     const newOffset = (event.selected * itemsPerPage) % data.length;
     setItemOffset(newOffset);
   };
-  // const Filterbyname = () => {
-  //   const updatedData = data.filter((item) => e.target.value === '' ? item : item.name.toLowerCase);
 
-  //   props.setData(updatedData);
-  // }
-  // const Filterbyrole = () => {
-
-  // }
   const Filterbyname = (e) => {
     setFilteredName(e.target.value);
   };
@@ -157,14 +150,14 @@ const Layout = (props) => {
     applyFilters();
   }, [filteredName, filteredRole, itemOffset, itemsPerPage, data]);
   return (
-    <>
-      <div style={{ margin: '10rem' }}>
+    <div className='filter' style={{ margin: '10rem' }}> 
         <div>
-          <input type="text" placeholder='Filter By Name' onChange={Filterbyname} />
+          <input className='namefilter' type="text" placeholder='Filter By Name' onChange={Filterbyname} />
           {'   '}
-          <input type="text" placeholder='Filter By Role' onChange={Filterbyrole} />
+          <input className='rolefilter' type="text" placeholder='Filter By Role' onChange={Filterbyrole} />
         </div>
         <Button
+        className='deleteall'
           variant="danger"
           size="sm"
           onClick={() => handleDelete()}
@@ -173,7 +166,7 @@ const Layout = (props) => {
           Delete Selected
         </Button>
         <Table className="Table" striped bordered hover size="sm">
-          <thead>
+          <thead className='tablehead'>
             <tr>
               <th>
                 <input
@@ -192,33 +185,33 @@ const Layout = (props) => {
           <tbody>
             {currentItems.map((item) => (
               item.id === editID ? (
-                <tr key={item.id}>
+                <tr key={item.id} className="selected">
                   <td>{item.id}</td>
                   <td><input type="text" value={name} onChange={(e) => setName(e.target.value)} /></td>
                   <td><input type="text" value={email} onChange={(e) => setEmail(e.target.value)} /></td>
                   <td><input type="text" value={role} onChange={(e) => setRole(e.target.value)} /></td>
-                  <td><button onClick={() => handleUpdate(item.id)}>Update</button></td>
+                  <td><button className='update' onClick={() => handleUpdate(item.id)}>Update</button></td>
                 </tr>
               ) : (
-                <tr key={item.id}>
+                <tr key={item.id} className={selectedItems.includes(item.id) ? 'selected' : ''}>
                   <td className="style"><input type="checkbox" onChange={() => handleCheckboxChange(item.id)} checked={selectedItems.includes(item.id)} /></td>
                   <td className="style">{item.id}</td>
                   <td className="style">{item.name}</td>
                   <td className="style">{item.email}</td>
                   <td className="style">{item.role}</td>
                   <td>
-                    <Button variant="info" size="sm" onClick={() => handleEdit(item.id)}>Edit</Button>
+                    <Button className='edit' variant="info" size="sm" onClick={() => handleEdit(item.id)}>Edit</Button>
                     {'   '}
-                    <Button variant="info" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
+                    <Button className='delete' variant="info" size="sm" onClick={() => handleDelete(item.id)}>Delete</Button>
                   </td>
                 </tr>
               )
             ))}
           </tbody>
         </Table>
-      </div>
+     
       <PaginationComponent pageCount={pageCount} handlePageClick={handlePageClick} />
-    </>
+    </div>
   );
 };
 
