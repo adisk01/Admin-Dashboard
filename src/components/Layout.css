@@ -101,6 +101,7 @@ font-size: 15px
 .namefilter {
   /* Add your desired styles for the name filter input */
   padding: 5px;
+  animation: alternate;
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
